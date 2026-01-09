@@ -1,4 +1,4 @@
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fkirill-dev-pro%2Foauth-vpn-portal)
+This is a fork of the oauth-vpn-portal project, which can orchestrate user management and setup for a Marzban / Trojan / XRay for building an Encrypted, Private and Obfuscated VPN.
 
 # OAuth VPN Portal
 
@@ -65,7 +65,7 @@ bunx @better-auth/cli migrate
 
 Optional, by default app will save authenticated users in `users-db.sqlite` db on the disk. You can have voulume for this file.
 
-If you want you can have a PostgreSQL database running somewhere to store logined users. You can run free postgres on https://neon.tech/, it will be enought.
+If you want you can have a PostgreSQL database running somewhere to store logined users.
 
 ## Development
 
