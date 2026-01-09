@@ -229,7 +229,23 @@ export class MarzbanAPI {
       proxies: buildProxiesMap(proxyTypes),
     }
 
-    return await this.marzban.user.addUser(params)
+    try {
+      return await this.marzban.user.addUser(params)
+    } catch (error) {
+      const maybeError = error as {
+        response?: { status?: number; data?: unknown }
+        message?: string
+      }
+      console.error('Marzban addUser failed', {
+        message: maybeError.message,
+        status: maybeError.response?.status,
+        data: maybeError.response?.data,
+        username,
+        inbounds: params.inbounds,
+        proxies: params.proxies,
+      })
+      throw error
+    }
   }
 
   async getOrCreatePanelUser(webSiteUser: User): Promise<MarzbanPanelUser> {
