@@ -295,14 +295,18 @@ export class MarzbanAPI {
 
   async loadInstanceInbounds() {
     const marzbanResponse = await this.marzban.system.getInbounds()
-    const arrayOfInbouds = Object.entries(Object.values(marzbanResponse).flat()).map(
-      ([type, inbound]) => ({
-        ...inbound,
-        type,
-        port: Number(inbound.port),
-      }),
-    )
+    const arrayOfInbounds: Inbound[] = []
+    for (const [type, inbounds] of Object.entries(marzbanResponse)) {
+      if (!Array.isArray(inbounds)) continue
+      for (const inbound of inbounds) {
+        arrayOfInbounds.push({
+          ...inbound,
+          type,
+          port: Number(inbound.port),
+        })
+      }
+    }
 
-    return arrayOfInbouds as Inbound[]
+    return arrayOfInbounds
   }
 }
