@@ -1,5 +1,7 @@
+import { MarzbanSubscriptionView } from '@/components/MarzbanSubscriptionView'
 import { SubViewComponent } from '@/components/RemnawaveSubscriptionView'
 import { env } from '@/lib/env'
+import { MarzbanAPI } from '@/lib/panel-api/marzban'
 import { RemnawaveAPI } from '@/lib/panel-api/remnawave'
 import { getSessionOrRedirect } from '@/lib/session'
 import { MantineProvider } from '@mantine/core'
@@ -31,4 +33,35 @@ export default async function VpnPage() {
       </div>
     )
   }
+
+  if (env.PANEL_TYPE === 'marzban') {
+    if (!env.MARZBAN_USERNAME || !env.MARZBAN_PASSWORD || !env.PANEL_API_URL) {
+      return (
+        <div className="flex flex-col items-center justify-center h-screen">
+          <h1 className="text-2xl font-bold">Marzban is not configured</h1>
+          <p className="text-sm text-gray-500">
+            Please specify MARZBAN_USERNAME, MARZBAN_PASSWORD and PANEL_API_URL in .env
+          </p>
+        </div>
+      )
+    }
+
+    const marzbanAPI = new MarzbanAPI({
+      baseUrl: env.PANEL_API_URL,
+      username: env.MARZBAN_USERNAME,
+      password: env.MARZBAN_PASSWORD,
+    })
+
+    const panelUser = await marzbanAPI.getOrCreatePanelUser(user)
+    await marzbanAPI.updatePanelUser(user)
+
+    return <MarzbanSubscriptionView subscription={panelUser} user={user} />
+  }
+
+  return (
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1 className="text-2xl font-bold">VPN panel is not configured</h1>
+      <p className="text-sm text-gray-500">Set PANEL_TYPE to remnawave or marzban.</p>
+    </div>
+  )
 }

@@ -11,10 +11,10 @@ import axios, { AxiosError, type AxiosInstance, type AxiosResponse } from 'axios
 import type { User } from 'better-auth'
 import { env } from '../env'
 import { gbToBytes } from '../utils'
-import { EXPIRE_NEVER, PANNEL_USER_ID_PREFIX } from './defaults'
+import { EXPIRE_NEVER, PANEL_USER_ID_PREFIX } from './defaults'
 
 const formatUsername = (username: string) => {
-  return (PANNEL_USER_ID_PREFIX + username).substring(0, 32) // 32 is the max length of the username for Remnawave
+  return (PANEL_USER_ID_PREFIX + username).substring(0, 32) // 32 is the max length of the username for Remnawave
 }
 
 export type RemnawavePanelUser = GetSubscriptionInfoByShortUuidCommand.Response['response']
@@ -35,7 +35,7 @@ export class RemnawaveAPI {
     // const inbounds = await this.loadInstanceInbounds()
     // const activeInbounds = inbounds.map((inbound) => inbound.uuid).filter(Boolean)
     // const activeInternalSquads = inbounds.map((inbound) => inbound.uuid).filter(Boolean)
-    const {internalSquads} = await loadInternalSquads(this.client)
+    const { internalSquads } = await loadInternalSquads(this.client)
 
     const username = formatUsername(webSiteUser.id)
 
@@ -146,7 +146,7 @@ export class RemnawaveAPI {
       AxiosResponse<DeleteUserCommand.Response>,
       DeleteUserCommand.Request
     >({
-      url: DeleteUserCommand.url(PANNEL_USER_ID_PREFIX + webSiteUser.id),
+      url: DeleteUserCommand.url(PANEL_USER_ID_PREFIX + webSiteUser.id),
       method: 'delete',
     })
   }
@@ -173,8 +173,9 @@ export class RemnawaveAPI {
   }
 }
 
-
-const loadInternalSquads = async (client: AxiosInstance): Promise<GetInternalSquadsCommand.Response['response']> => {
+const loadInternalSquads = async (
+  client: AxiosInstance,
+): Promise<GetInternalSquadsCommand.Response['response']> => {
   const { data } = await client<
     GetInternalSquadsCommand.Response,
     AxiosResponse<GetInternalSquadsCommand.Response>

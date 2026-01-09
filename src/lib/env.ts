@@ -28,14 +28,19 @@ export const env = createEnv({
 
     MARZBAN_USERNAME: z.string().optional(),
     MARZBAN_PASSWORD: z.string().optional(),
-    // MARZBAN_USER_INBOUNDS: z
-    //   .object({
-    //     vmess: z.array(z.string()),
-    //     vless: z.array(z.string()),
-    //     trojan: z.array(z.string()),
-    //     shadowsocks: z.array(z.string()),
-    //   })
-    //   .optional(),
+    MARZBAN_USER_INBOUNDS: z
+      .preprocess(
+        (value) => {
+          if (typeof value !== 'string' || value.trim() === '') return value
+          try {
+            return JSON.parse(value)
+          } catch {
+            return value
+          }
+        },
+        z.record(z.array(z.string())),
+      )
+      .optional(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),
@@ -66,9 +71,7 @@ export const env = createEnv({
     // Marzban
     MARZBAN_USERNAME: process.env.MARZBAN_USERNAME,
     MARZBAN_PASSWORD: process.env.MARZBAN_PASSWORD,
-    // MARZBAN_USER_INBOUNDS: process.env.MARZBAN_USER_INBOUNDS
-    //   ? JSON.parse(process.env.MARZBAN_USER_INBOUNDS)
-    //   : undefined,
+    MARZBAN_USER_INBOUNDS: process.env.MARZBAN_USER_INBOUNDS,
 
     NEXT_PUBLIC_LOGIN_BUTTON_TEXT: process.env.NEXT_PUBLIC_LOGIN_BUTTON_TEXT,
     NEXT_PUBLIC_MARZBAN_INSTANCE_URL: process.env.NEXT_PUBLIC_MARZBAN_INSTANCE_URL,
